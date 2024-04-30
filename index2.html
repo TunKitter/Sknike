@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas {
+            border: 2px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRL6Rj7E1dqHWiMT33Rr7EFc34uVtXqiTkh9uNz-lD7SEbsfMCo884XtiRzryrQamuZ5Qc&usqp=CAU"
+        alt="das" style="display: none;">
+    <script src="./Snake.js"></script>
+    <script src="./Seed.js"></script>
+    <script>
+        const canvas = document.querySelector('canvas')
+        canvas.width = innerWidth - 100
+        canvas.height = innerHeight - 100
+        const context = canvas.getContext('2d')
+        const _snake = new Snake(context)
+        const _seed = new Seed(context, _snake, canvas)
+        const image = document.querySelector('img')
+        var obj_animation = null
+        _seed.newSeed()
+        function animate() {
+            obj_animation = requestAnimationFrame(animate)
+            context.clearRect(0, 0, innerWidth, innerHeight)
+            _seed.draw()
+            _snake.draw()
+            if (_snake.x < 0 || _snake.x > canvas.width - _snake.size || _snake.y < 0 || _snake.y > canvas.height - _snake.size) {
+                cancelAnimationFrame(obj_animation)
+                if (confirm('game over? Start again?')) {
+                    _snake.snake_length = [[_snake.size, _snake.size]]
+                    _snake.x = 10 + _snake.size
+                    _snake.y = 10 + _snake.size
+                    _snake.speed = 2
+                    _snake.direction = 'right'
+                    requestAnimationFrame(animate)
+                }
+            }
+            _seed.isEat()
+        }
+        window.addEventListener('keydown', function (e) {
+            switch (e.key) {
+                case 'ArrowLeft':
+                case 'a':
+                    {
+                        preventGoBack('left', 'right')
+                        break
+                    }
+                case 'ArrowRight':
+                case 'd':
+                    {
+                        preventGoBack('right', 'left')
+                        break
+                    }
+                case 'ArrowUp':
+                case 'w':
+                    {
+                        preventGoBack('up', 'down')
+                        break
+                    }
+                case 'ArrowDown':
+                case 's':
+                    {
+                        preventGoBack('down', 'up')
+                        break
+                    }
+            }
+        })
+        animate()
+        function preventGoBack(direction, preventDirection) {
+            if (_snake.direction !== preventDirection || _snake.speed == 0) {
+                if (_snake.direction === direction) _snake.speed += 5
+                else _snake.speed = 2
+                _snake.direction = direction
+            }
+            else {
+                _snake.speed -= 5
+                if (_snake.speed < 0) _snake.speed = 0
+
+            }
+        }
+    </script>
+</body>
+
+</html>
