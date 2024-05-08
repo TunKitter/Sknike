@@ -20,14 +20,17 @@
     <script src="./Seed.js"></script>
     <script src="./SnakeControl.js"></script>
     <script src="./Rules/ReachEdge.js"></script>
+    <script src="./Rules/UseTongue.js"></script>
     <script>
         const canvas = document.querySelector('canvas')
         canvas.width = innerWidth - 100
         canvas.height = innerHeight - 100
         const context = canvas.getContext('2d')
         const _snake = new Snake(context)
-        _snake.createSnakeRule(new ReachEdge(_snake, canvas, gameOver));
         const _seed = new Seed(context, [_snake], canvas)
+        _snake.createSnakeRule(new ReachEdge(_snake, canvas, gameOver));
+        _snake.createSnakeRule(new UseTongue(context, _snake, _seed));
+
         const image = document.querySelector('img')
         _seed.newSeed()
         var obj_animation = null
