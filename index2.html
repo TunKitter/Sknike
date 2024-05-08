@@ -19,13 +19,14 @@
     <script src="./Snake.js"></script>
     <script src="./Seed.js"></script>
     <script src="./SnakeControl.js"></script>
-    <script src="./rules/BaseRule.js"></script>
+    <script src="./Rules/ReachEdge.js"></script>
     <script>
         const canvas = document.querySelector('canvas')
         canvas.width = innerWidth - 100
         canvas.height = innerHeight - 100
         const context = canvas.getContext('2d')
         const _snake = new Snake(context)
+        _snake.createSnakeRule(new ReachEdge(_snake, canvas, gameOver));
         const _seed = new Seed(context, [_snake], canvas)
         const image = document.querySelector('img')
         _seed.newSeed()
@@ -35,22 +36,23 @@
             context.clearRect(0, 0, innerWidth, innerHeight)
             _seed.draw()
             _snake.draw()
-            if (_snake.x < 0 || _snake.x > canvas.width - _snake.size || _snake.y < 0 || _snake.y > canvas.height - _snake.size) {
-                cancelAnimationFrame(obj_animation)
-                if (confirm('game over? Start again?')) {
-                    _snake.snake_length = [[_snake.size, _snake.size]]
-                    _snake.x = 10 + _snake.size
-                    _snake.y = 10 + _snake.size
-                    _snake.speed = 2
-                    _snake.direction = 'right'
-                    requestAnimationFrame(animate)
-                }
-            }
             _seed.isEat();
         }
         animate();
 
         (new SnakeControl(_snake, window)).keyDownEvent();
+        function gameOver() {
+            cancelAnimationFrame(obj_animation)
+            if (confirm('game over? Start again?')) startGame()
+        }
+        function startGame() {
+            _snake.snake_length = [[_snake.size, _snake.size]]
+            _snake.x = 10 + _snake.size
+            _snake.y = 10 + _snake.size
+            _snake.speed = 2
+            _snake.direction = 'right'
+            requestAnimationFrame(animate)
+        }
     </script>
 </body>
 

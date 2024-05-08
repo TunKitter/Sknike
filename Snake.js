@@ -7,6 +7,7 @@ class Snake {
   direction = 'right';
   context = null;
   speed = 2;
+  rules = [];
   constructor(context) {
     this.context = context;
   }
@@ -47,6 +48,9 @@ class Snake {
     this.speed = value;
   }
   draw() {
+    this.rules.forEach(rule => {
+      rule();
+    });
     this.snake_length.push([this.x, this.y]);
     this.snake_length.shift();
     this.handleDirection();
@@ -83,5 +87,8 @@ class Snake {
       }
     }
     return [this.x, this.y];
+  }
+  createSnakeRule(callback) {
+    this.rules.push(callback);
   }
 }
