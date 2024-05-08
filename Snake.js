@@ -8,6 +8,20 @@ class Snake {
   context = null;
   speed = 2;
   rules = [];
+  styles = {
+    head: {
+      style: 'color',
+      value: '#FF0080',
+    },
+    body: {
+      style: 'color',
+      value: ['#FF5580', '#FFAA80'],
+    },
+    tail: {
+      style: 'color',
+      value: '#FFFF80',
+    },
+  };
   constructor(context) {
     this.context = context;
   }
@@ -16,6 +30,18 @@ class Snake {
   }
   get snake_length() {
     return this.snake_length;
+  }
+  set styleHead(arr) {
+    this.styles.head = arr;
+  }
+  set styleBody(arr) {
+    this.styles.body = arr;
+  }
+  set styleTail(arr) {
+    this.styles.tail = arr;
+  }
+  set styles(arr) {
+    this.styles = arr;
   }
   get x() {
     return this.x;
@@ -56,7 +82,17 @@ class Snake {
     this.handleDirection();
     this.context.beginPath();
     // this.context.fillRect(10, 10, this.radius, this.radius);
-    for (let i = 0; i < this.snake_length.length; i++) {
+    this.context.fillStyle = this.styles.tail.value;
+    this.context.fillRect(
+      this.snake_length[0][0],
+      this.snake_length[0][1],
+      this.size,
+      this.size
+    );
+    let temp_body = this.styles.body.value;
+    for (let i = 1; i < this.snake_length.length - 1; i++) {
+      this.context.fillStyle =
+        temp_body[i < temp_body.length ? i : i % temp_body.length];
       this.context.fillRect(
         this.snake_length[i][0],
         this.snake_length[i][1],
@@ -64,6 +100,14 @@ class Snake {
         this.size
       );
     }
+    this.context.fillStyle = this.styles.head.value;
+    this.context.fillRect(
+      this.snake_length[this.snake_length.length - 1][0],
+      this.snake_length[this.snake_length.length - 1][1],
+      this.size,
+      this.size
+    );
+
     this.context.fill();
     this.context.closePath();
   }
