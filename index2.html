@@ -19,28 +19,22 @@
     <script src="./Snake.js"></script>
     <script src="./Seed.js"></script>
     <script src="./SnakeControl.js"></script>
+    <script src="./rules/BaseRule.js"></script>
     <script>
         const canvas = document.querySelector('canvas')
         canvas.width = innerWidth - 100
         canvas.height = innerHeight - 100
         const context = canvas.getContext('2d')
         const _snake = new Snake(context)
-        const _snake2 = new Snake(context)
-        _snake2.x += _snake2.size
-        _snake2.y += _snake2.size
-        const _seed = new Seed(context, [_snake, _snake2], canvas)
-        const _seed2 = new Seed(context, [_snake, _snake2], canvas)
+        const _seed = new Seed(context, [_snake], canvas)
         const image = document.querySelector('img')
         _seed.newSeed()
-        _seed2.newSeed()
         var obj_animation = null
         function animate() {
             obj_animation = requestAnimationFrame(animate)
             context.clearRect(0, 0, innerWidth, innerHeight)
             _seed.draw()
-            _seed2.draw()
             _snake.draw()
-            _snake2.draw()
             if (_snake.x < 0 || _snake.x > canvas.width - _snake.size || _snake.y < 0 || _snake.y > canvas.height - _snake.size) {
                 cancelAnimationFrame(obj_animation)
                 if (confirm('game over? Start again?')) {
@@ -53,12 +47,10 @@
                 }
             }
             _seed.isEat();
-            _seed2.isEat();
         }
         animate();
 
         (new SnakeControl(_snake, window)).keyDownEvent();
-        (new SnakeControl(_snake2, window)).keyDownEvent()
     </script>
 </body>
 
