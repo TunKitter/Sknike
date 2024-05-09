@@ -14,13 +14,14 @@
 
 <body>
     <canvas></canvas>
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRL6Rj7E1dqHWiMT33Rr7EFc34uVtXqiTkh9uNz-lD7SEbsfMCo884XtiRzryrQamuZ5Qc&usqp=CAU"
-        alt="das" style="display: none;">
+    <img src="https://www.pngitem.com/pimgs/m/148-1484218_black-hole-png-transparent-black-hole-png-png.png" alt="das"
+        style="display: none;">
     <script src="./Snake.js"></script>
     <script src="./Seed.js"></script>
     <script src="./SnakeControl.js"></script>
     <script src="./Rules/ReachEdge.js"></script>
     <script src="./Rules/UseTongue.js"></script>
+    <script src="./Rules/Teleport.js"></script>
     <script>
         const canvas = document.querySelector('canvas')
         canvas.width = innerWidth - 100
@@ -30,8 +31,9 @@
         const _seed = new Seed(context, [_snake], canvas)
         _snake.createSnakeRule(new ReachEdge(_snake, canvas, gameOver));
         _snake.createSnakeRule(new UseTongue(context, _snake, _seed));
-
         const image = document.querySelector('img')
+        _snake.createSnakeRule(new Teleport(canvas, context, _snake, image));
+
         _seed.newSeed()
         var obj_animation = null
         function animate() {
