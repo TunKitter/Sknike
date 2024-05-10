@@ -1,4 +1,5 @@
 class SnakeControl {
+  key_status = [];
   constructor(snake, _window) {
     this.snake = snake;
     this._window = _window;
@@ -39,6 +40,11 @@ class SnakeControl {
           break;
         }
       }
+    });
+  }
+  addSnakeRule(event_name, key, callback) {
+    this._window.addEventListener(event_name, function (e) {
+      if (e.key === key) callback();
     });
   }
 }
