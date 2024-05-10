@@ -9,143 +9,80 @@
         canvas {
             border: 2px solid red;
         }
+
+        #btn-play {
+            position: absolute;
+        }
     </style>
 </head>
 
 <body>
+    <button id="btn-play">Start game</button>
     <canvas></canvas>
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRL6Rj7E1dqHWiMT33Rr7EFc34uVtXqiTkh9uNz-lD7SEbsfMCo884XtiRzryrQamuZ5Qc&usqp=CAU"
-        alt="das" style="display: none;">
+    <img src="https://www.pngitem.com/pimgs/m/148-1484218_black-hole-png-transparent-black-hole-png-png.png" alt="das"
+        style="display: none;">
+    <script src="./Snake.js"></script>
+    <script src="./Seed.js"></script>
+    <script src="./SnakeControl.js"></script>
+    <script src="./Rules/ReachEdge.js"></script>
+    <script src="./Rules/UseTongue.js"></script>
+    <script src="./Rules/Teleport.js"></script>
+    <script src="./Rules/SpawnSnake.js"></script>
     <script>
         const canvas = document.querySelector('canvas')
         canvas.width = innerWidth - 100
         canvas.height = innerHeight - 100
         const context = canvas.getContext('2d')
-        const radius = 20
-        var snake_length = [[radius, radius]]
-        const image = document.querySelector('img')
-        function drawCircle(x, y) {
-            context.beginPath()
-            for (let i = 0; i < snake_length.length; i++) {
-                // context.arc(x + i, y + i, radius + i, 0, 2 * Math.PI)
-
-                context.drawImage(image, snake_length[i][0], snake_length[i][1], radius, radius);
-                // context.fillRect(snake_length[i][0], snake_length[i][1], radius, radius)
-            }
-            context.fill()
-            context.closePath()
-
-        }
-        var seed_x = null
-        var seed_y = null
-        function seed(is_new) {
-            if (is_new) {
-                seed_x = parseInt(Math.random() * (canvas.width - (radius * 3))) + (radius * 2)
-                seed_y = parseInt(Math.random() * (canvas.height - (radius * 3))) + (radius * 2)
-                snake_length.unshift([seed_x, seed_y])
-                snake_length.unshift([seed_x, seed_y])
-            }
-
-            context.beginPath()
-            context.fillStyle = 'green'
-            context.fillRect(seed_x, seed_y, radius, radius)
-            context.fillStyle = 'black'
-        }
-        var x = 10 + radius
-        var y = 10 + radius
-        var obj_animation = null
-        var current_direction = 'right'
-        let speed = 2
-        seed(1)
+        window.addEventListener('resize', () => {
+            canvas.width = innerWidth - 100
+            canvas.height = innerHeight - 100
+        })
+        var _snake, _seed, image, obj_animation, snakeControl;
+        initGame();
         function animate() {
             obj_animation = requestAnimationFrame(animate)
             context.clearRect(0, 0, innerWidth, innerHeight)
-            seed(0)
-            snake_length.push([x, y])
-            snake_length.shift()
-            drawCircle(...handleDirection())
-            if (x < 0 || x > canvas.width - radius || y < 0 || y > canvas.height - radius) {
-                cancelAnimationFrame(obj_animation)
-                if (confirm('game over? Start again?')) {
-                    snake_length = [[radius, radius]]
-                    x = 10 + radius
-                    y = 10 + radius
-                    speed = 2
-                    current_direction = 'right'
-                    requestAnimationFrame(animate)
+            _seed.draw()
+            _snake.draw()
+            _seed.isEat();
+        }
+        function gameOver() {
+            if (confirm('game over? Start again?')) startGame()
+        }
+        function startGame() {
+            cancelAnimationFrame(obj_animation)
+            initGame()
+            _seed.newSeed()
+            animate();
+        }
+        function initGame() {
+            _snake = new Snake(context)
+            _seed = new Seed(context, [_snake], canvas)
+            _snake.createSnakeRule(new ReachEdge(_snake, canvas, gameOver));
+            _snake.createSnakeRule(new UseTongue(context, _snake, _seed));
+            image = document.querySelector('img')
+            _snake.createSnakeRule(new Teleport(canvas, context, _snake, image));
+            obj_animation = null
+            snakeControl = (new SnakeControl(_snake, window))
+            snakeControl.keyDownEvent();
+            snakeControl.key_status['e'] = false
+            snakeControl.addSnakeRule('keydown', 'e', function () {
+                if (snakeControl.key_status['e'] == false) {
+                    snakeControl.key_status['e'] = true;
+                    let newSnake = new Snake(context)
+                    newSnake.createSnakeRule(new ReachEdge(newSnake, canvas, function () {
+                        _snake.rules.pop()
+                        snakeControl.key_status['e'] = false
+                    }))
+                    newSnake.createSnakeRule(new UseTongue(context, newSnake, _seed));
+                    let img = document.createElement('img')
+                    img.src = 'https://png.pngtree.com/element_our/20190529/ourmid/pngtree-blue-vortex-black-hole-image_1199231.jpg'
+                    newSnake.createSnakeRule(new Teleport(canvas, context, newSnake, img));
+                    (new SpawnSnake(_snake, newSnake, _seed))()
                 }
-            }
-            let snake = new Path2D()
-            snake.arc(x, y, radius, 0, 2 * Math.PI)
-            if (context.isPointInPath(snake, seed_x, seed_y)) {
-                seed(1)
-            }
+            });
         }
-        function handleDirection() {
-            switch (current_direction) {
-                case 'right': {
-                    x += speed
-                    break
-                }
-                case 'left':
-                    {
-                        x -= speed
-                        break
-                    }
-                case 'down':
-                    {
-                        y += speed
-                        break
-                    }
-                case 'up':
-                    {
-                        y -= speed
-                        break
-                    }
-            }
-            return [x, y]
-        }
-        window.addEventListener('keydown', function (e) {
-            switch (e.key) {
-                case 'ArrowLeft':
-                case 'a':
-                    {
-                        preventGoBack('left', 'right')
-                        break
-                    }
-                case 'ArrowRight':
-                case 'd':
-                    {
-                        preventGoBack('right', 'left')
-                        break
-                    }
-                case 'ArrowUp':
-                case 'w':
-                    {
-                        preventGoBack('up', 'down')
-                        break
-                    }
-                case 'ArrowDown':
-                case 's':
-                    {
-                        preventGoBack('down', 'up')
-                        break
-                    }
-            }
-        })
-        animate()
-        function preventGoBack(direction, preventDirection) {
-            if (current_direction !== preventDirection || speed == 0) {
-                if (current_direction === direction) speed += 5
-                else speed = 2
-                current_direction = direction
-            }
-            else {
-                speed -= 5
-                if (speed < 0) speed = 0
-
-            }
-        }
+        document.querySelector('#btn-play').onclick = startGame
     </script>
 </body>
 
