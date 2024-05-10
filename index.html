@@ -37,7 +37,7 @@
             canvas.width = innerWidth - 100
             canvas.height = innerHeight - 100
         })
-        var _snake, _seed, image, obj_animation, snakeControl;
+        var _snake, snakes, _seed, image, obj_animation, snakeControl;
         initGame();
         function animate() {
             obj_animation = requestAnimationFrame(animate)
@@ -57,7 +57,8 @@
         }
         function initGame() {
             _snake = new Snake(context)
-            _seed = new Seed(context, [_snake], canvas)
+            snakes = [_snake]
+            _seed = new Seed(context, snakes, canvas)
             _snake.createSnakeRule(new ReachEdge(_snake, canvas, gameOver));
             _snake.createSnakeRule(new UseTongue(context, _snake, _seed));
             image = document.querySelector('img')
@@ -70,15 +71,17 @@
                 if (snakeControl.key_status['e'] == false) {
                     snakeControl.key_status['e'] = true;
                     let newSnake = new Snake(context)
+                    newSnake.speed = 20
+                    snakes.push(newSnake)
                     newSnake.createSnakeRule(new ReachEdge(newSnake, canvas, function () {
                         _snake.rules.pop()
                         snakeControl.key_status['e'] = false
                     }))
                     newSnake.createSnakeRule(new UseTongue(context, newSnake, _seed));
                     let img = document.createElement('img')
-                    img.src = 'https://png.pngtree.com/element_our/20190529/ourmid/pngtree-blue-vortex-black-hole-image_1199231.jpg'
-                    newSnake.createSnakeRule(new Teleport(canvas, context, newSnake, img));
-                    (new SpawnSnake(_snake, newSnake, _seed))()
+                    img.src = 'https://png.pngtree.com/element_our/20190529/ourmid/pngtree-blue-vortex-black-hole-image_1199231.jpg';
+                    // newSnake.createSnakeRule(new Teleport(canvas, context, newSnake, img));
+                    (new SpawnSnake(context, _snake, newSnake, _seed))();
                 }
             });
         }
