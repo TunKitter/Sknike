@@ -6,7 +6,8 @@ class SpawnSnake {
           newSnake.rules.forEach(rule => {
             rule();
           });
-          console.log(newSnake.x, seed.x, '|', newSnake.y, seed.y);
+          // console.log(newSnake.x, seed.x, '|', newSnake.y, seed.y);
+          // console.log(newSnake.snake_length);
           if (newSnake.x - seed.x > newSnake.speed) newSnake.direction = 'left';
           else if (newSnake.x - seed.x < 0) newSnake.direction = 'right';
           else newSnake.x = seed.x;

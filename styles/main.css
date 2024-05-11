@@ -1,0 +1,61 @@
+@font-face {
+  font-family: 'bruceForever';
+  src: url(fonts/bruceForever.ttf);
+}
+* {
+  padding: 0;
+  font-family: 'bruceForever';
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  overflow: hidden;
+}
+
+#menu {
+  position: absolute;
+  flex-direction: column;
+  gap: 1em;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  transition-duration: 0.5s;
+  /* background: url(https://i.pinimg.com/originals/74/43/a3/7443a31b6a19e5630b94a6538ff9bdd1.gif); */
+  background: url(https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/An_exceptional_kind_of_unstable_node.gif/1200px-An_exceptional_kind_of_unstable_node.gif);
+  background-size: cover;
+}
+
+.btn-control {
+  padding: 10px 20px;
+  width: 20%;
+  color: white;
+  background: black;
+  border-radius: 5px;
+  transition-duration: 0.2s;
+}
+.btn-control:hover {
+  cursor: pointer;
+  color: #f97300;
+}
+.btn-control:focus {
+  outline: none;
+  background-color: #f97300;
+  color: white;
+}
+#title-game {
+  font-size: 2.5em;
+  margin-bottom: 1em;
+  transition-duration: 0.2s;
+}
+.items {
+  position: absolute;
+  top: 1em;
+  right: 5em;
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 4px;
+}
