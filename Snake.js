@@ -22,8 +22,22 @@ class Snake {
       value: '#FFFF80',
     },
   };
+  parent_snake = null;
+  apply_for = 1;
   constructor(context) {
     this.context = context;
+  }
+  get parent_snake() {
+    return this.parent_snake;
+  }
+  get apply_for() {
+    return this.apply_for;
+  }
+  set parent_snake(snake) {
+    this.parent_snake = snake;
+  }
+  set apply_for(apply_for) {
+    this.apply_for = apply_for;
   }
   get size() {
     return this.size;

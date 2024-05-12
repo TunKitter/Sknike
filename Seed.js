@@ -36,8 +36,7 @@ class Seed {
     this.context.fillStyle = 'black';
   }
 
-  newSeed(snake) {
-    // for (let i = 0; i < snake.length; i++) {
+  newSeed(snake = null) {
     this.x =
       parseInt(Math.random() * (this.canvas.width - this.size * 3)) +
       this.size * 2;
@@ -45,11 +44,30 @@ class Seed {
       parseInt(Math.random() * (this.canvas.height - this.size * 3)) +
       this.size * 2;
     if (snake) {
-      snake.snake_length.unshift([this.x, this.y]);
-      snake.snake_length.unshift([this.x, this.y]);
+      let snakes = [];
+      if (snake.parent_snake == null && snake.apply_for == 1) {
+        snakes = [snake];
+      } else if (snake.parent_snake && snake.apply_for == 2) {
+        snakes = [snake.parent_snake];
+      } else if (snake.parent_snake && snake.apply_for == 3) {
+        snakes = [snake, snake.parent_snake];
+      } else {
+        snakes = [snake];
+      }
+      for (let i = 0; i < snakes.length; i++) {
+        snakes[i].snake_length.unshift([this.x, this.y]);
+        snakes[i].snake_length.unshift([this.x, this.y]);
+      }
     }
-    // }
   }
+  /*
+  - apply_for:
+    + 0: none
+    + 1: current snake
+    + 2: parent snake
+    + 3: all snakes
+  */
+
   isEat() {
     for (let i = 0; i < this.snakes.length; i++) {
       let snake_pos = new Path2D();

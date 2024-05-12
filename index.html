@@ -82,6 +82,22 @@
                     snakeControl.key_status['e'] = true;
                     let newSnake = new Snake(context)
                     newSnake.speed = 8
+                    newSnake.parent_snake = _snake
+                    newSnake.apply_for = 2;
+                    newSnake.styles = {
+                        head: {
+                            style: 'color',
+                            value: '#7469B6',
+                        },
+                        body: {
+                            style: 'color',
+                            value: ['#AD88C6', '#E1AFD1'],
+                        },
+                        tail: {
+                            style: 'color',
+                            value: '#FFE6E6',
+                        },
+                    }
                     snakes.push(newSnake)
                     newSnake.createSnakeRule(new ReachEdge(newSnake, canvas, function () {
                         _snake.rules.pop()

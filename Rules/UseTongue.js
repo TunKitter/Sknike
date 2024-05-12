@@ -1,6 +1,5 @@
 class UseTongue {
   constructor(context, _snake, _seed) {
-    var eat_sound = this.eatSound;
     return function () {
       if (
         Math.abs(_snake.x - _seed.x) < 70 &&
