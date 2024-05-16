@@ -80,6 +80,7 @@ class Seed {
       if (this.context.isPointInPath(snake_pos, this.x, this.y)) {
         this.newSeed(this.snakes[i]);
         new Audio('./audio/eat.mp3').play();
+        GameData.increaseCoin(1);
       }
     }
   }

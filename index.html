@@ -11,12 +11,13 @@
 <body>
     <div id="menu">
         <div class="items">
-            <div class="gold">931</div>
+            <div class="gold">Please wait...</div>
+            <div class="back-icon" onclick="backToMenu()">Back</div>
         </div>
-        <h1 id="title-game">SNIKE</h1>
-        <button id="btn-play" class="btn-control">Start game</button>
-        <button class="btn-control">Shop</button>
-        <button class="btn-control">Upgrade</button>
+        <div id="main-menu">
+            <h1 id="title-game">SHOP</h1>
+            <div class="shop-items"></div>
+        </div>
     </div>
     <canvas></canvas>
     <img src="https://www.pngitem.com/pimgs/m/148-1484218_black-hole-png-transparent-black-hole-png-png.png" alt="das"
@@ -28,13 +29,19 @@
     <script src="./Rules/UseTongue.js"></script>
     <script src="./Rules/Teleport.js"></script>
     <script src="./Rules/SpawnSnake.js"></script>
+    <script src="./data/HtmlMenu.js"></script>
     <script src="Sound.js"></script>
+    <script src="./data/GameData.js"></script>
     <script>
+        GameData.init()
         const canvas = document.querySelector('canvas')
         canvas.width = innerWidth
         canvas.height = innerHeight
         const context = canvas.getContext('2d')
         const menu = document.querySelector('#menu')
+        const main_menu = document.querySelector('#main-menu')
+        const back_icon = document.querySelector('.back-icon')
+        var layer_menu = ['main']
         const sounds = {
             main: new Sound('./audio/investigation.mp3'),
             failed: new Sound('./audio/failed.mp3'),
@@ -50,6 +57,7 @@
             _seed.isEat();
         }
         function gameOver() {
+            document.querySelector('.gold').innerHTML = GameData.getCoin();
             sounds.failed.play()
             sounds.main.pause()
 
@@ -70,48 +78,50 @@
             snakes = [_snake]
             _seed = new Seed(context, snakes, canvas)
             _snake.createSnakeRule(new ReachEdge(_snake, canvas, gameOver));
-            _snake.createSnakeRule(new UseTongue(context, _snake, _seed));
+            if (GameData.isItemExist(0)) _snake.createSnakeRule(new UseTongue(context, _snake, _seed));
             image = document.querySelector('img')
-            _snake.createSnakeRule(new Teleport(canvas, context, _snake, image));
+            if (GameData.isItemExist(1)) _snake.createSnakeRule(new Teleport(canvas, context, _snake, image));
             obj_animation = null
             snakeControl = (new SnakeControl(_snake, window))
             snakeControl.keyDownEvent();
-            snakeControl.key_status['e'] = false
-            snakeControl.addSnakeRule('keydown', 'e', function () {
-                if (snakeControl.key_status['e'] == false) {
-                    snakeControl.key_status['e'] = true;
-                    let newSnake = new Snake(context)
-                    newSnake.speed = 8
-                    newSnake.parent_snake = _snake
-                    newSnake.apply_for = 2;
-                    newSnake.styles = {
-                        head: {
-                            style: 'color',
-                            value: '#7469B6',
-                        },
-                        body: {
-                            style: 'color',
-                            value: ['#AD88C6', '#E1AFD1'],
-                        },
-                        tail: {
-                            style: 'color',
-                            value: '#FFE6E6',
-                        },
+            if (GameData.isItemExist(2)) {
+                snakeControl.key_status['e'] = false
+                snakeControl.addSnakeRule('keydown', 'e', function () {
+                    if (snakeControl.key_status['e'] == false) {
+                        snakeControl.key_status['e'] = true;
+                        let newSnake = new Snake(context)
+                        newSnake.speed = 8
+                        newSnake.parent_snake = _snake
+                        newSnake.apply_for = 2;
+                        newSnake.styles = {
+                            head: {
+                                style: 'color',
+                                value: '#7469B6',
+                            },
+                            body: {
+                                style: 'color',
+                                value: ['#AD88C6', '#E1AFD1'],
+                            },
+                            tail: {
+                                style: 'color',
+                                value: '#FFE6E6',
+                            },
+                        }
+                        snakes.push(newSnake)
+                        newSnake.createSnakeRule(new ReachEdge(newSnake, canvas, function () {
+                            _snake.rules.pop()
+                            snakeControl.key_status['e'] = false
+                        }))
+                        newSnake.createSnakeRule(new UseTongue(context, newSnake, _seed));
+                        let img = document.createElement('img')
+                        img.src = 'https://png.pngtree.com/element_our/20190529/ourmid/pngtree-blue-vortex-black-hole-image_1199231.jpg';
+                        // newSnake.createSnakeRule(new Teleport(canvas, context, newSnake, img));
+                        (new SpawnSnake(context, _snake, newSnake, _seed))();
                     }
-                    snakes.push(newSnake)
-                    newSnake.createSnakeRule(new ReachEdge(newSnake, canvas, function () {
-                        _snake.rules.pop()
-                        snakeControl.key_status['e'] = false
-                    }))
-                    newSnake.createSnakeRule(new UseTongue(context, newSnake, _seed));
-                    let img = document.createElement('img')
-                    img.src = 'https://png.pngtree.com/element_our/20190529/ourmid/pngtree-blue-vortex-black-hole-image_1199231.jpg';
-                    // newSnake.createSnakeRule(new Teleport(canvas, context, newSnake, img));
-                    (new SpawnSnake(context, _snake, newSnake, _seed))();
-                }
-            });
+                });
+            }
         }
-        document.querySelector('#btn-play').onclick = startGame
+
         function hideMenu() {
             menu.style.opacity = 0
             menu.style.zIndex = -1
@@ -120,6 +130,26 @@
             menu.style.opacity = 1
             menu.style.zIndex = 1
         }
+        function setMenu(name) {
+            main_menu.innerHTML = HTMLMenu(name)
+            if (layer_menu.includes(name) == false) {
+                layer_menu.push(name)
+            }
+            if (layer_menu.length == 1) {
+                back_icon.style.opacity = 0
+                back_icon.style.zIndex = -1
+            }
+            else {
+                back_icon.style.opacity = 1
+                back_icon.style.zIndex = 1
+            }
+        }
+        function backToMenu() {
+            layer_menu.pop()
+            setMenu(layer_menu[layer_menu.length - 1])
+        }
+
+        setMenu('main');
     </script>
 </body>
 

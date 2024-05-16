@@ -16,7 +16,6 @@ body {
 #menu {
   position: absolute;
   flex-direction: column;
-  gap: 1em;
   z-index: 9999;
   display: flex;
   justify-content: center;
@@ -29,7 +28,14 @@ body {
   background: white;
   /* background-size: cover; */
 }
-
+#main-menu {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+}
 .btn-control {
   padding: 10px 20px;
   width: 20%;
@@ -55,8 +61,75 @@ body {
 .items {
   position: absolute;
   top: 1em;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  gap: 1em;
+  width: 100vw;
+}
+.items div {
+  position: absolute;
+  top: 1em;
+  padding: 10px;
+  border: 1px solid black;
+}
+
+.gold {
   right: 5em;
+}
+.back-icon {
+  background: black;
+  color: white;
+  left: 5em;
+  cursor: pointer;
+}
+.shop-items {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+  flex-wrap: wrap;
+}
+.shop-item .shop-item-image {
+  width: 100px;
+  height: 100px;
   border: 1px solid black;
   padding: 10px;
-  border-radius: 4px;
+}
+.shop-item {
+  background: white;
+  padding: 10px;
+  text-align: center;
+  width: 20%;
+  height: 270px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+}
+.shop-item-description {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.8em;
+  text-align: left;
+}
+.shop-item-price {
+  color: #f97300;
+}
+.shop-item-button {
+  background: white;
+  padding: 1em 2em;
+  border: 1px solid black;
+}
+.shop-item-button:hover {
+  cursor: pointer;
+  background: black;
+  color: white;
+}
+@keyframes shake {
+  from {
+    transform: translateX(-2px);
+  }
+  to {
+    transform: translate(2px);
+  }
 }

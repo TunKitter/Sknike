@@ -15,6 +15,7 @@ class UseTongue {
         // )
         new Audio('./audio/eat.mp3').play();
         _seed.newSeed(_snake);
+        GameData.increaseCoin(1);
       }
     };
   }
