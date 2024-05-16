@@ -10,7 +10,7 @@
 }
 
 body {
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 #menu {
@@ -25,8 +25,9 @@ body {
   height: 100vh;
   transition-duration: 0.5s;
   /* background: url(https://i.pinimg.com/originals/74/43/a3/7443a31b6a19e5630b94a6538ff9bdd1.gif); */
-  background: url(https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/An_exceptional_kind_of_unstable_node.gif/1200px-An_exceptional_kind_of_unstable_node.gif);
-  background-size: cover;
+  /* background: url(https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/An_exceptional_kind_of_unstable_node.gif/1200px-An_exceptional_kind_of_unstable_node.gif); */
+  background: white;
+  /* background-size: cover; */
 }
 
 .btn-control {

@@ -72,10 +72,10 @@ class Seed {
     for (let i = 0; i < this.snakes.length; i++) {
       let snake_pos = new Path2D();
       snake_pos.rect(
-        this.snakes[i].x,
-        this.snakes[i].y,
-        this.snakes[i].size,
-        this.snakes[i].size
+        this.snakes[i].x - this.snakes[i].size,
+        this.snakes[i].y - this.snakes[i].size,
+        this.snakes[i].size * 2,
+        this.snakes[i].size * 2
       );
       if (this.context.isPointInPath(snake_pos, this.x, this.y)) {
         this.newSeed(this.snakes[i]);
